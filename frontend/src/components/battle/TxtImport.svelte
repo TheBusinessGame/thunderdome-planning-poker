@@ -1,5 +1,4 @@
 <script>
-    import he from 'he'
 
     import HollowButton from '../HollowButton.svelte'
     import { AppConfig } from '../../config.js'
@@ -10,6 +9,8 @@
     export let handlePlanAdd = () => {}
 
     const allowTxtImport = AppConfig.AllowTxtImport
+
+    let plans = []
 
     function uploadFile() {
         let file = this.files[0]
@@ -28,58 +29,15 @@
 
         reader.onload = () => {
             try {
-                const docParser = new DOMParser()
-                const commentReg = new RegExp('/<!--.*?-->/sig')
-                const domContent = reader.result.replace(commentReg, '')
-                const doc = docParser.parseFromString(
-                    domContent,
-                    'application/txt',
-                )
-                const items = doc.querySelectorAll('channel>item')
+                const content = reader.result;
+                const items = parseTextFile(content);
                 if (items) {
                     const totalItems = items.length
                     for (let i = 0; i < totalItems; i++) {
                         const item = items[i]
-                        const decodedDescription = he.decode(
-                            item.querySelector('description').innerHTML,
-                        )
-                        const customFields = item.querySelectorAll(
-                            'customfields>customfield',
-                        )
-                        let acceptanceCriteria = ''
-
-                        if (customFields) {
-                            for (let j = 0; j < customFields.length; j++) {
-                                const cfName =
-                                    customFields[j].querySelector(
-                                        'customfieldname',
-                                    ).innerHTML
-                                const cfValues =
-                                    customFields[j].querySelector(
-                                        'customfieldvalues',
-                                    ).innerHTML
-
-                                if (
-                                    cfName.toLowerCase() ===
-                                    'acceptance criteria'
-                                ) {
-                                    acceptanceCriteria = cfValues
-                                }
-                            }
-                        }
-
-                        const plan = {
-                            id: '',
-                            planName: item.querySelector('summary').innerHTML,
-                            type: item
-                                .querySelector('type')
-                                .innerHTML.toLowerCase(),
-                            referenceId: item.querySelector('key').innerHTML,
-                            link: item.querySelector('link').innerHTML,
-                            description: decodedDescription,
-                            acceptanceCriteria,
-                        }
-                        handlePlanAdd(plan)
+                        const plan = extractPlanData(item);
+                        plans.push(plan)
+                        handlePlanAdd(plan);
                     }
                     eventTag(
                         'Txt_import_success',
@@ -98,21 +56,50 @@
             eventTag('Txt_import_failed', 'battle', `ferror reading file`)
         }
     }
+
+    function parseTextFile(content) {
+        const lines = content.split('\n');
+        const items = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line) {
+                items.push(line);
+            }
+        }
+
+        return items;
+    }
+
+    function extractPlanData(item) {
+        const fields = item.split(';');
+        const plan = {
+            id: '',
+            planName: fields[0].trim(),
+            type: fields[1].trim().toLowerCase(),
+            referenceId: fields[2].trim(),
+            link: fields[3].trim(),
+            description: fields[4].trim(),
+            acceptanceCriteria: fields[5] ? fields[5].trim() : ''
+        };
+
+        return plan;
+    }
 </script>
 
 {#if allowTxtImport}
     <HollowButton
         type="label"
         additionalClasses="rtl:ml-2 ltr:mr-2"
-        color="blue"
+        color="purple"
         labelFor="txtimport"
     >
-        {$_('importTxtFile')}
+        {$_('importTxt')}
         <input
             type="file"
             on:change="{uploadFile}"
             class="hidden"
-            id="plans-txtimport"
+            id="txtimport"
             accept=".txt"
         />
     </HollowButton>

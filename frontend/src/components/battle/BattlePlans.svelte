@@ -151,12 +151,13 @@
                 <HollowButton onClick="{toggleAddPlan()}" testid="plans-add">
                     {$_('planAdd')}
                 </HollowButton>
+                
                 <TxtImport
-                handlePlanAdd="{handlePlanAdd}"
-                notifications="{notifications}"
-                eventTag="{eventTag}"
-                testid="plans-txtimport"
-            />
+                    handlePlanAdd="{handlePlanAdd}"
+                    notifications="{notifications}"
+                    eventTag="{eventTag}"
+                    testid="plans-txtimport"
+                 />
             {/if}
         </div>
     </div>

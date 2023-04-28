@@ -238,13 +238,15 @@
             <HollowButton onClick="{addPlan}">
                 {$_('pages.myBattles.createBattle.fields.plans.addButton')}
             </HollowButton>
-            aa
+        </div>
+        <div class="control mb-4">
             <TxtImport
-                handlePlanAdd="{handlePlanImport}"
-                notifications="{notifications}"
-                eventTag="{eventTag}"
+            handlePlanAdd="{handlePlanImport}"
+            notifications="{notifications}"
+            eventTag="{eventTag}"
             />
         </div>
+        
         {#each plans as plan, i}
             <div class="flex flex-wrap mb-2">
                 <div class="w-3/4">
