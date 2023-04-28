@@ -72,7 +72,7 @@
     }
 
     function extractPlanData(item) {
-        const fields = item.split(';');
+        const fields = item.split(',');
         const plan = {
             id: '',
             planName: fields[0].trim(),

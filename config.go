@@ -62,7 +62,7 @@ func InitConfig(logger *otelzap.Logger) {
 	viper.SetDefault("config.toast_timeout", 1000)
 	viper.SetDefault("config.allow_guests", true)
 	viper.SetDefault("config.allow_registration", true)
-	viper.SetDefault("config.allow_jira_import", true)
+	viper.SetDefault("config.allow_jira_import", false)
 	viper.SetDefault(("config.allow_txt_import"),true)
 	viper.SetDefault("config.default_locale", "en")
 	viper.SetDefault("config.friendly_ui_verbs", false)
