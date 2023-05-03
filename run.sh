@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Enter a directory name:"
-read DIR_NAME
 DIR="/home/$USER/$DIR_NAME"
 
 FILE="$DIR/poker.env"

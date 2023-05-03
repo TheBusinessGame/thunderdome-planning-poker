@@ -11,7 +11,7 @@
     import Bars2 from '../icons/Bars2.svelte'
     import ChevronDown from '../icons/ChevronDown.svelte'
     import DoubleChevronDown from '../icons/DoubleChevronDown.svelte'
-    import TxtImport from './TxtImport.svelte'
+    import CsvImport from './CsvImport.svelte'
 
     export let plans = []
     export let isLeader = false
@@ -152,11 +152,11 @@
                     {$_('planAdd')}
                 </HollowButton>
                 
-                <TxtImport
+                <CsvImport
                     handlePlanAdd="{handlePlanAdd}"
                     notifications="{notifications}"
                     eventTag="{eventTag}"
-                    testid="plans-txtimport"
+                    testid="plans-Csvimport"
                  />
             {/if}
         </div>

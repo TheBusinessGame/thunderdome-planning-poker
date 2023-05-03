@@ -91,7 +91,7 @@ set that user as ADMIN role.
 | `config.allow_registration`           | CONFIG_ALLOW_REGISTRATION           | Whether or not to allow user registration (outside Admin).                                                           | true                                                      |
 | `config.allow_jira_import`            | CONFIG_ALLOW_JIRA_IMPORT            | Whether or not to allow import plans from JIRA XML.                                                                  | 
 true                                                      |
-| `config.allow_txt_import`             | CONFIG_ALLOW_TXT_IMPORT             | Whether or not to allow import plans from a txt file                                                                 |
+| `config.allow_csv_import`             | CONFIG_ALLOW_CSV_IMPORT             | Whether or not to allow import plans from a csv file                                                                 |
 true                                                      |
 | `config.default_locale`               | CONFIG_DEFAULT_LOCALE               | The default locale (language) for the UI                                                                             | en                                                        |
 | `config.friendly_ui_verbs`            | CONFIG_FRIENDLY_UI_VERBS            | Whether or not to use more friendly UI verbs like Users instead of Warrior, e.g. Corporate friendly                  | false                                                     |
