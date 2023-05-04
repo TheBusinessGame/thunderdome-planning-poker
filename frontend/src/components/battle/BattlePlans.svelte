@@ -133,14 +133,14 @@
     <div
         class="flex items-center bg-gray-200 dark:bg-gray-700 p-4 rounded-t-lg"
     >
-        <div class="w-1/2">
+        <div class="w-1/3">
             <h3
                 class="text-3xl leading-tight font-semibold font-rajdhani uppercase dark:text-white"
             >
                 {$_('plans')}
             </h3>
         </div>
-        <div class="w-1/2 ltr:text-right rtl:text-left">
+        <div class="w-2/3 ltr:text-right rtl:text-left">
             {#if isLeader}
                 <JiraImport
                     handlePlanAdd="{handlePlanAdd}"
@@ -151,7 +151,7 @@
                 <HollowButton onClick="{toggleAddPlan()}" testid="plans-add">
                     {$_('planAdd')}
                 </HollowButton>
-                
+
                 <CsvImport
                     handlePlanAdd="{handlePlanAdd}"
                     notifications="{notifications}"
