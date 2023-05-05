@@ -62,8 +62,8 @@
           "averageRounding": {
             "label": "Metodo di arrotondamento medio del punto",
             "ceil": "CEIL",
-            "floor": "floor",
-            "round": "round"
+            "floor": "Floor",
+            "round": "Round"
           }
         }
       }

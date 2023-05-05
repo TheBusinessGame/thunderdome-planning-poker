@@ -198,7 +198,7 @@
             class="flex flex-wrap items-center border-b border-gray-300 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 "
             data-testid="plan"
         >
-            <div class="w-full lg:w-2/3 mb-4 lg:mb-0">
+            <div class="w-full lg:w-1/3 mb-4 lg:mb-0">
                 <div
                     class="inline-block font-bold align-middle dark:text-white"
                 >
@@ -235,7 +235,7 @@
                     </div>
                 {/if}
             </div>
-            <div class="w-full lg:w-1/3 ltr:text-right rtl:text-left">
+            <div class="w-full lg:w-2/3 ltr:text-right rtl:text-left">
                 <HollowButton
                     color="blue"
                     onClick="{togglePlanView(plan.id)}"
