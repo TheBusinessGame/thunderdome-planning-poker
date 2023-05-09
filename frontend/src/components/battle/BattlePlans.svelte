@@ -116,6 +116,24 @@
         eventTag('plans_show', 'battle', `completed: ${show}`)
     }
 
+    const handleGitlabChangeWeight = (id, points) => {
+
+    const url = '';
+    const data = JSON.stringify({ id, points });
+
+    fetch(url, {
+        method: 'POST',
+        mode: 'no-cors', // aggiunto il campo mode
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: data
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+    }
+
     $: pointedPlans = plans.filter(p => p.points !== '')
     $: totalPoints = pointedPlans.reduce((previousValue, currentValue) => {
         var currentPoints =
@@ -198,7 +216,7 @@
             class="flex flex-wrap items-center border-b border-gray-300 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 "
             data-testid="plan"
         >
-            <div class="w-full lg:w-1/3 mb-4 lg:mb-0">
+            <div class="w-full lg:w-1/2 mb-4 lg:mb-0">
                 <div
                     class="inline-block font-bold align-middle dark:text-white"
                 >
@@ -233,9 +251,18 @@
                     >
                         {plan.points}
                     </div>
+                    {#if isLeader}
+                    <HollowButton
+                        color="green"
+                        onClick={() => handleGitlabChangeWeight(plan.referenceId, plan.points)}
+                        testid="plan-change"
+                    >
+                        {$_('change weight')}
+                    </HollowButton>
+                    {/if}
                 {/if}
             </div>
-            <div class="w-full lg:w-2/3 ltr:text-right rtl:text-left">
+            <div class="w-full lg:w-1/2 ltr:text-right rtl:text-left">
                 <HollowButton
                     color="blue"
                     onClick="{togglePlanView(plan.id)}"
@@ -277,6 +304,7 @@
             class="flex flex-wrap items-center border-b border-gray-300 dark:border-gray-700 p-4 bg-white dark:bg-gray-800 "
         >
             <div class="w-full lg:w-2/3 mb-4 lg:mb-0">
+                
                 <div
                     class="inline-block font-bold align-middle dark:text-gray-300"
                 >
