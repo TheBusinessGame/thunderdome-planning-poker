@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"bytes"
+	"net/http"
+	"io/ioutil"
 )
 
 // UserNudge handles notifying user that they need to vote
@@ -276,6 +279,57 @@ func (b *Service) PlanSkip(ctx context.Context, BattleID string, UserID string, 
 
 	return msg, nil, false
 }
+
+func (b *Service) ChangeWeight(ctx context.Context, ReferenceId string, Points int) ([]byte, error, bool) {
+    // Make the POST request
+    if err := makePostRequest(); err != nil {
+        return nil, err, false
+    }
+
+    plans, err := b.db.WeightChange(ReferenceId, Points)
+    if err != nil {
+        return nil, err, false
+    }
+
+    updatedPlans, _ := json.Marshal(plans)
+    msg := createSocketEvent("plan_skipped", string(updatedPlans), "")
+
+    return msg, nil, false
+}
+
+func makePostRequest() error {
+    // Define the data to be sent in the request body
+    data := map[string]string{
+        "hello": "world",
+    }
+    jsonBytes, err := json.Marshal(data)
+    if err != nil {
+        return err
+    }
+
+    // Create the HTTP request object
+    req, err := http.NewRequest("POST", "https://httpdump.app/dumps/c472c049-5d49-45cc-9a0a-5d78759117c4", bytes.NewBuffer(jsonBytes))
+    if err != nil {
+        return err
+    }
+    req.Header.Set("Content-Type", "application/json")
+
+    // Send the HTTP request and get the response
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+
+    // Check the status code of the response
+    if resp.StatusCode != http.StatusOK {
+        return fmt.Errorf("server returned status %d", resp.StatusCode)
+    }
+
+    return nil
+}
+
 
 // PlanFinalize handles setting a plan point value
 func (b *Service) PlanFinalize(ctx context.Context, BattleID string, UserID string, EventValue string) ([]byte, error, bool) {

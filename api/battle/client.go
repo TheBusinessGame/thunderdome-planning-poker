@@ -37,6 +37,7 @@ var leaderOnlyOperations = map[string]struct{}{
 	"activate_plan":  {},
 	"skip_plan":      {},
 	"end_voting":     {},
+	"change_weight":  {},
 	"finalize_plan":  {},
 	"jab_warrior":    {},
 	"promote_leader": {},

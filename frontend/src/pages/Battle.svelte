@@ -298,13 +298,13 @@
             },
         },
     )
-
+    
     onDestroy(() => {
         eventTag('leave', 'battle', '', () => {
             ws.close()
         })
     })
-
+    
     const sendSocketEvent = (type, value) => {
         ws.send(
             JSON.stringify({

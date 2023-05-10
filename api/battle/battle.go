@@ -42,6 +42,7 @@ func New(
 		"burn_plan":        b.PlanDelete,
 		"activate_plan":    b.PlanActivate,
 		"skip_plan":        b.PlanSkip,
+		"change_weight":	b.ChangeWeight,
 		"finalize_plan":    b.PlanFinalize,
 		"promote_leader":   b.UserPromote,
 		"demote_leader":    b.UserDemote,

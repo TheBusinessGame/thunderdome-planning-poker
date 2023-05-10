@@ -224,7 +224,7 @@ func (a *api) handleGetBattle() http.HandlerFunc {
 				return
 			}
 		}
-
+		
 		a.Success(w, r, http.StatusOK, b, nil)
 	}
 }

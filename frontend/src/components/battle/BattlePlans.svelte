@@ -115,25 +115,13 @@
         showCompleted = show
         eventTag('plans_show', 'battle', `completed: ${show}`)
     }
-
+    
     const handleGitlabChangeWeight = (id, points) => {
-
-    const url = '';
-    const data = JSON.stringify({ id, points });
-
-    fetch(url, {
-        method: 'POST',
-        mode: 'no-cors', // aggiunto il campo mode
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: data
-    })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
+        const payload = JSON.stringify({ id, points });
+        sendSocketEvent('change_weight', payload);
+        eventTag('weight_change', 'battle', '');
     }
-
+    
     $: pointedPlans = plans.filter(p => p.points !== '')
     $: totalPoints = pointedPlans.reduce((previousValue, currentValue) => {
         var currentPoints =

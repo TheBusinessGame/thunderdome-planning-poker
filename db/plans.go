@@ -162,6 +162,17 @@ func (d *Database) SkipPlan(BattleID string, PlanID string) ([]*model.Plan, erro
 	return plans, nil
 }
 
+func (d *Database) WeightChange(ReferenceID string, Points int) ([]*model.Plan, error) {
+	if _, err := d.db.Exec(
+		`call skip_plan_voting($1, $2);`, ReferenceID, Points); err != nil {
+		d.logger.Error("call skip_plan_voting error", zap.Error(err))
+	}
+
+	plans := d.GetPlans(ReferenceID, "", Points, "")
+
+	return plans, nil
+}
+
 // RevisePlan updates the plan by ID
 func (d *Database) RevisePlan(BattleID string, PlanID string, PlanName string, PlanType string, ReferenceID string, Link string, Description string, AcceptanceCriteria string, Priority int32) ([]*model.Plan, error) {
 	SanitizedDescription := d.htmlSanitizerPolicy.Sanitize(Description)

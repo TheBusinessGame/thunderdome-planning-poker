@@ -266,7 +266,7 @@ func Init(config *Config, router *mux.Router, database *db.Database, email *emai
 		apiRouter.HandleFunc("/battles", a.userOnly(a.adminOnly(a.handleGetBattles()))).Methods("GET")
 		apiRouter.HandleFunc("/battles/{battleId}", a.userOnly(a.handleGetBattle())).Methods("GET")
 		apiRouter.HandleFunc("/battles/{battleId}", a.userOnly(a.handleBattleDelete(b))).Methods("DELETE")
-		apiRouter.HandleFunc("/battles/{battleId}/plans", a.userOnly(a.handleBattlePlanAdd(b))).Methods("POST")
+		apiRouter.HandleFunc("/plans", a.userOnly(a.handleBattlePlanAdd(b))).Methods("POST")
 		apiRouter.HandleFunc("/arena/{battleId}", b.ServeBattleWs())
 	}
 	// retro(s)
