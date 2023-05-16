@@ -1,12 +1,14 @@
 package battle
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
-	"bytes"
+	"fmt"
 	"net/http"
-	"io/ioutil"
+	"os"
+	"strings"
 )
 
 // UserNudge handles notifying user that they need to vote
@@ -272,62 +274,78 @@ func (b *Service) PlanActivate(ctx context.Context, BattleID string, UserID stri
 func (b *Service) PlanSkip(ctx context.Context, BattleID string, UserID string, EventValue string) ([]byte, error, bool) {
 	plans, err := b.db.SkipPlan(BattleID, EventValue)
 	if err != nil {
-		return nil, err, false
-	}
+        return nil, err, false
+    }
 	updatedPlans, _ := json.Marshal(plans)
 	msg := createSocketEvent("plan_skipped", string(updatedPlans), "")
 
 	return msg, nil, false
-}
-
-func (b *Service) ChangeWeight(ctx context.Context, ReferenceId string, Points int) ([]byte, error, bool) {
-    // Make the POST request
-    if err := makePostRequest(); err != nil {
-        return nil, err, false
     }
 
-    plans, err := b.db.WeightChange(ReferenceId, Points)
-    if err != nil {
-        return nil, err, false
-    }
+func (b *Service) ChangeWeight(ctx context.Context, referenceID string, points string, eventValue string) ([]byte, error, bool) {
+	//Dichiarazione del token gitlab
+	gitlab_token := os.Getenv("GITLAB_TOKEN")
 
-    updatedPlans, _ := json.Marshal(plans)
-    msg := createSocketEvent("plan_skipped", string(updatedPlans), "")
+	// Dichiarazione delle variabili link e points
+	var link, gitlabAPIURL, projectID, issueID, weight string
 
-    return msg, nil, false
-}
+	// Estrazione dei valori da eventValue
+	var eventData struct {
+		Link   string `json:"link"`
+		Points string `json:"points"`
+	}
+	if err := json.Unmarshal([]byte(eventValue), &eventData); err != nil {
+		return nil, err, false
+	}
 
-func makePostRequest() error {
-    // Define the data to be sent in the request body
-    data := map[string]string{
-        "hello": "world",
-    }
-    jsonBytes, err := json.Marshal(data)
-    if err != nil {
-        return err
-    }
+	link = eventData.Link
 
-    // Create the HTTP request object
-    req, err := http.NewRequest("POST", "https://httpdump.app/dumps/c472c049-5d49-45cc-9a0a-5d78759117c4", bytes.NewBuffer(jsonBytes))
-    if err != nil {
-        return err
-    }
-    req.Header.Set("Content-Type", "application/json")
+	index := strings.Index(link, "//") + 2
+	domainIndex := strings.Index(link[index:], ".") + index
+	gitlabAPIURL = link[index:domainIndex]
 
-    // Send the HTTP request and get the response
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        return err
-    }
-    defer resp.Body.Close()
+	projectIndex := strings.Index(link[domainIndex:], "/") + domainIndex
+	issueIndex := strings.LastIndex(link, "/")
+	projectID = link[domainIndex+1 : projectIndex]
 
-    // Check the status code of the response
-    if resp.StatusCode != http.StatusOK {
-        return fmt.Errorf("server returned status %d", resp.StatusCode)
-    }
 
-    return nil
+	issueID = link[issueIndex+1:]
+
+	weight = eventData.Points
+	postData := struct {
+		Weight string `json:"weight"`
+	}{
+		Weight: weight,
+	}
+	data, err := json.Marshal(postData)
+	if err!= nil {
+		return nil, err, false
+	}
+
+	url := fmt.Sprintf("%s/api/v4/projects/%s/issues/%s", gitlabAPIURL, projectID, issueID)
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(data))
+	if err != nil {
+		return nil, err, false
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", gitlab_token)
+
+	// Invio della richiesta HTTP
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err, false
+	}
+	defer resp.Body.Close()
+
+	// Verifica del codice di stato della risposta
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to update issue weight: %s", resp.Status), false
+	}
+
+	msg := ""
+
+	return []byte(msg), nil, false
 }
 
 

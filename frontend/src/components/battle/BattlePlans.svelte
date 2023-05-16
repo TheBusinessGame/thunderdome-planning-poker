@@ -116,8 +116,8 @@
         eventTag('plans_show', 'battle', `completed: ${show}`)
     }
     
-    const handleGitlabChangeWeight = (id, points) => {
-        const payload = JSON.stringify({ id, points });
+    const handleGitlabChangeWeight = (link, points) => {
+        const payload = JSON.stringify({ link, points });
         sendSocketEvent('change_weight', payload);
         eventTag('weight_change', 'battle', '');
     }
@@ -242,7 +242,7 @@
                     {#if isLeader}
                     <HollowButton
                         color="green"
-                        onClick={() => handleGitlabChangeWeight(plan.referenceId, plan.points)}
+                        onClick={() => handleGitlabChangeWeight(plan.link, plan.points)}
                         testid="plan-change"
                     >
                         {$_('change weight')}
